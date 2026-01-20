@@ -1,8 +1,20 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from script import count_status, read_json_file, write_json_file, delete_ticket_by_id, update_json_ticket_status
 
+origins= [
+   "http://localhost:5173"
+]
 
 app = FastAPI()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # GET endpoints
 @app.get("/tickets")
