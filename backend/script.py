@@ -28,7 +28,6 @@ def read_json_file():
 
 
 # TODO: Auto-incrémenter l'ID lors de l'ajout d'un nouveau ticket
-# TODO: Vérifier que le ticket n'existe pas déjà avant de l'ajouter
 # TODO: Valider le format du ticket avant de l'ajouter
 def write_json_file(json_object):
     """
