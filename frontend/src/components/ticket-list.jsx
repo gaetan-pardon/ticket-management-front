@@ -86,7 +86,16 @@ export function TicketsList ()
                     </li>)
                 })}
             </ul>
+            <form onSubmit={(e) => {} } >
+                <input type="text" name="title" placeholder="Titre" />
+                <input type="text" name="description" placeholder="Description" />
+                <input type="text" name="priority" placeholder="Priorité" />
+                <input type="text" name="tags" placeholder="Tags" />
+
+                <button type="submit">envoyer</button>
+            </form>
+        
         </div>
     )
 }
-//                     <button id='delete-button' onClick={deleteTicket(ticket)}>Supprimer</button>
+
