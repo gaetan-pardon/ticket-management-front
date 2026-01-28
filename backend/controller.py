@@ -1,16 +1,21 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
-from script import count_status, read_json_file, write_json_file, delete_ticket_by_id, update_json_ticket_status
-from pydantic import BaseModel
-from models.StatusEnum import StatusEnum
-from models.TicketCreate import TicketCreate
+from fastapi.responses import JSONResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi import HTTPException
 
+from script import count_status, read_json_file, write_json_file, delete_ticket_by_id, update_json_ticket_status
+from models.TicketCreate import TicketCreate
+from models.StatusUpdate import StatusUpdate
+
+import json
+
+
+app = FastAPI()
 
 origins= [
    "http://localhost:5173"
 ]
-
-app = FastAPI()
 
 app.add_middleware(
     CORSMiddleware,
@@ -21,28 +26,121 @@ app.add_middleware(
 )
 
 
+@app.exception_handler(RequestValidationError)
+async def validation_exception_handler(request: Request, exc: RequestValidationError):
+   return JSONResponse(
+      status_code=422,
+      content={
+         "status": 422,
+         "message": getattr(exc, "detail", "Validation error"),
+         "details": exc.errors() if hasattr(exc, "errors") else None
+      }
+   )
+
+@app.exception_handler(HTTPException)
+async def http_exception_handler(request: Request, exc: HTTPException):
+   return JSONResponse(
+      status_code=exc.status_code,
+      content={
+         "status": exc.status_code,
+         "message": getattr(exc, "detail", "HTTP error"),
+         "details": exc.errors() if hasattr(exc, "errors") else None
+      }
+   )
+
+@app.exception_handler(FileNotFoundError)
+async def file_not_found_exception_handler(request: Request, exc: FileNotFoundError):
+   return JSONResponse(
+      status_code=404,
+      content={
+         "status": 404,
+         "message": getattr(exc, "detail", "File not found"),
+         "details": exc.errors() if hasattr(exc, "errors") else None
+      }
+   )
+
+@app.exception_handler(json.JSONDecodeError)
+async def json_decode_exception_handler(request: Request, exc: json.JSONDecodeError):
+   return JSONResponse(
+      status_code=400,
+      content={
+         "status": 400,
+         "message": getattr(exc, "detail", "JSON decode error"),
+         "details": exc.errors() if hasattr(exc, "errors") else None
+      }
+   )
+
+@app.exception_handler(PermissionError)
+async def permission_exception_handler(request: Request, exc: PermissionError):
+   return JSONResponse(
+      status_code=403,
+      content={
+         "status": 403,
+         "message": getattr(exc, "detail", "Permission denied"),
+         "details": exc.errors() if hasattr(exc, "errors") else None
+      }
+   )
+
+@app.exception_handler(TypeError)
+async def type_error_handler(request: Request, exc: TypeError):
+   return JSONResponse(
+      status_code=400,
+      content={
+         "status": 400,
+         "message": getattr(exc, "detail", "Type error"),
+         "details": exc.errors() if hasattr(exc, "errors") else str(exc)
+      }
+   )
+
+@app.exception_handler(ValueError)
+async def value_error_handler(request: Request, exc: ValueError):
+   return JSONResponse(
+      status_code=400,
+      content={
+         "status": 400,
+         "message": getattr(exc, "detail", "Value error"),
+         "details": exc.errors() if hasattr(exc, "errors") else str(exc)
+      }
+   )
+
+@app.exception_handler(Exception)
+async def generic_exception_handler(request: Request, exc: Exception):
+   return JSONResponse(
+      status_code=500,
+      content={
+         "status": 500,
+         "message": getattr(exc, "detail", "Internal server error"),
+         "details": exc.errors() if hasattr(exc, "errors") else str(exc)
+      }
+   )
+
+
 
 # GET endpoints
 @app.get("/tickets")
 async def root():
-   return read_json_file()
+   result = read_json_file()
+   return JSONResponse(status_code=result["status"], content=result)
 
 @app.get("/tickets/count-status")
 async def count_status_endpoint():
-    return count_status()
+   result = count_status()
+   return JSONResponse(status_code=result["status"], content=result)
 
 # DELETE endpoints
 @app.delete("/tickets/{id}")
 async def delete_ticket(id: int):
-   return delete_ticket_by_id(id)
+   result = delete_ticket_by_id(id)
+   return JSONResponse(status_code=result["status"], content=result)
 
 # POST endpoints
 @app.post("/tickets")
 async def create_ticket(ticket: TicketCreate):
-    return write_json_file(ticket)
+   result = write_json_file(ticket)
+   return JSONResponse(status_code=result["status"], content=result)
 
 # PATCH endpoints
 @app.patch("/tickets/{id}")
-async def update_ticket_status(id: int, status: StatusEnum):
-   print(status)
-   return update_json_ticket_status(id, status.value)
+async def update_ticket_status(id: int, status_update: StatusUpdate):
+   result = update_json_ticket_status(id, status_update.status)
+   return JSONResponse(status_code=result["status"], content=result)
