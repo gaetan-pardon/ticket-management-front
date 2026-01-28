@@ -1,6 +1,7 @@
 import json
 
-from response import Response
+from models import StatusEnum, StatusEnum, TicketCreate
+from models.response import Response
 
 filepath = 'tickets.json'
 
@@ -29,7 +30,7 @@ def read_json_file():
 
 # TODO: Auto-incrémenter l'ID lors de l'ajout d'un nouveau ticket
 # TODO: Valider le format du ticket avant de l'ajouter
-def write_json_file(json_object):
+def write_json_file(json_object : TicketCreate):
     """
     Writes a dictionary to a JSON file.
     Args:
@@ -87,7 +88,7 @@ def count_status():
     return Response(200, "Statut compté avec succès.", status_count)
 
 
-def delete_ticket_by_id(ticket_id):
+def delete_ticket_by_id(ticket_id: int):
     """
     Deletes a ticket from the JSON file by its ID.
     Args:
@@ -123,7 +124,7 @@ def delete_ticket_by_id(ticket_id):
         return Response(500, f"Erreur lors de l'écriture du fichier: {str(e)}", None)
 
 
-def update_json_ticket_status(ticket_id, new_status):
+def update_json_ticket_status(ticket_id: int, new_status: StatusEnum):
     """
     Updates the status of a ticket in the JSON file by its ID.
     Args:

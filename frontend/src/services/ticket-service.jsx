@@ -9,7 +9,7 @@ export const getAllTicketsService = async () => {
     try {
         const response = await fetch(URL, {
             method: "GET"
-        }) ;
+        });
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }

@@ -9,6 +9,7 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
     async function updateTicket() {
         const selectObject = document.getElementById(selectId);
         const selectedStatus = selectObject.options[selectObject.selectedIndex].value;
+        console.log('Updating ticket id ', ticket.id, ' to status ', selectedStatus);
         updateStatusService(ticket.id, selectedStatus)
             .then(data => {
                 updateTicketinList(ticket, selectedStatus);
@@ -19,14 +20,14 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
     return (
         <div id={ticket.id} className="ticket-card" data-priority={ticket.priority.toLowerCase()}>
             <h1>{ticket.id + " " + ticket.title}</h1>
-            <p><strong>Description:</strong> {ticket.description}</p>
-            <p><strong>Priority:</strong> {ticket.priority}</p>
-            <p><strong>Status:</strong> <span className={`status-badge status-${ticket.status.replace(' ', '-')}`}>{ticket.status}</span></p>
-            <p><strong>Tags:</strong> {ticket.tags.join(', ')}</p>
-            <p><strong>Created At:</strong> {ticket.createdAt}</p>
+            <p><strong>Description :</strong> {ticket.description}</p>
+            <p><strong>Priorité :</strong> {ticket.priority}</p>
+            <p><strong>Status :</strong> <span className={`status-badge status-${ticket.status.replace(' ', '-')}`}>{ticket.status}</span></p>
+            <p><strong>Tags :</strong> {ticket.tags.join(', ')}</p>
+            <p><strong>Date de création :</strong> {ticket.createdAt}</p>
             <select id={selectId}>
                 <option value="open">Open</option>
-                <option value="in progress">In progress</option>
+                <option value="in progress">In Progress</option>
                 <option value="close">Close</option>
             </select>
             <button onClick={updateTicket}>Mettre à jour le statut</button>

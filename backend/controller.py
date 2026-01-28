@@ -2,7 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from script import count_status, read_json_file, write_json_file, delete_ticket_by_id, update_json_ticket_status
 from pydantic import BaseModel
-from enum import Enum
+from models.StatusEnum import StatusEnum
+from models.TicketCreate import TicketCreate
+
 
 origins= [
    "http://localhost:5173"
@@ -19,24 +21,6 @@ app.add_middleware(
 )
 
 
-class PriorityEnum(Enum):
-    low = "Low"
-    medium = "Medium"
-    high = "High"
-
-class StatusEnum(Enum):
-    InProgress = "In Progress"
-    open = "Open"
-    closed = "Closed"
-
-class TicketCreate(BaseModel):
-   title: str
-   description: str
-   status: StatusEnum 
-   tags: list[str]
-   priority: PriorityEnum
-   createdAt: str
-   id: int
 
 # GET endpoints
 @app.get("/tickets")

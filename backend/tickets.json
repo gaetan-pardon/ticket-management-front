@@ -25,18 +25,6 @@
         "createdAt": "2026-01-17"
     },
     {
-        "id": 5,
-        "title": "Implémenter les notifications push",
-        "description": "Ajouter un système de notifications en temps réel pour alerter les utilisateurs des mises à jour importantes.",
-        "priority": "Low",
-        "status": "Open",
-        "tags": [
-            "feature",
-            "notifications"
-        ],
-        "createdAt": "2026-01-14"
-    },
-    {
         "id": 6,
         "title": "Bug d'affichage du dashboard",
         "description": "Les graphiques du tableau de bord ne s'affichent pas correctement sur Safari.",
