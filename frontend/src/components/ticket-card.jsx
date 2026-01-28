@@ -1,7 +1,7 @@
 import { updateStatusService } from '../services/ticket-service';
+import './ticket-card.css';
 
-
-export function TicketCard(ticket, updateTicketinList) {
+export function TicketCard(ticket, updateTicketinList, deleteTicket) {
 
     const selectId = `select-status-${ticket.id}`;
     const statusId = `status-${ticket.id}`;
@@ -17,20 +17,20 @@ export function TicketCard(ticket, updateTicketinList) {
     }
 
     return (
-        <div id={ticket.id}>
-            id : {ticket.id}<br/>
-            title : {ticket.title}<br/>
-            description : {ticket.description}<br/>
-            priority : {ticket.pritority}<br/>
-            status : {ticket.status}<br/>
-            tags : { ticket.tags.join(', ')}<br/>
-            createdAt : {ticket.createdAt}<br/>
+        <div id={ticket.id} className="ticket-card" data-priority={ticket.priority.toLowerCase()}>
+            <h1>{ticket.id + " " + ticket.title}</h1>
+            <p><strong>Description:</strong> {ticket.description}</p>
+            <p><strong>Priority:</strong> {ticket.priority}</p>
+            <p><strong>Status:</strong> <span className={`status-badge status-${ticket.status.replace(' ', '-')}`}>{ticket.status}</span></p>
+            <p><strong>Tags:</strong> {ticket.tags.join(', ')}</p>
+            <p><strong>Created At:</strong> {ticket.createdAt}</p>
             <select id={selectId}>
                 <option value="open">Open</option>
                 <option value="in progress">In progress</option>
                 <option value="close">Close</option>
             </select>
             <button onClick={updateTicket}>Mettre à jour le statut</button>
+            <button onClick={() => deleteTicket(ticket)} className="delete-button">Supprimer</button>
         </div>
     )
 } 

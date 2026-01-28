@@ -69,6 +69,11 @@ export const deleteTicketService = async (id) => {
     }
 }
 
+/**
+ * Créer un nouveau ticket respectant la mise en forme.
+ * @param {*} ticket - Le ticket à créer 
+ * @returns Le ticket créé
+ */
 export const createTicketService = async (ticket) => {
     try {
         const response = await fetch(`${URL}`, {

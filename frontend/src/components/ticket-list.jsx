@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { getAllTicketsService, deleteTicketService, createTicketService } from "../services/ticket-service.jsx" ;
 import { TicketCard } from './ticket-card.jsx';
 
-
+import './ticket-list.css';
 
 export function TicketsList () 
 {
@@ -68,25 +68,7 @@ export function TicketsList ()
 
     return(
         <div>
-            <button onClick={() => createTicket({
-                "title": "Ajouter un filtre par priorité",
-                "description": "Permettre de filtrer les tickets par priorité (Low, Medium, High) sur la page liste.",
-                "priority": "Medium",
-                "status": "In progress",
-                "tags": ["feature", "ux"],
-                "createdAt": "2026-01-15"
-            })}>Ajouter ticket</button>
-            <ul>
-                { tickets.map(ticket=>{
-                    const deleteId = 'delete-button-' + ticket.id;
-                    return (
-                    <li key={ticket.id}>
-                        { TicketCard(ticket, updateTicket) }
-                        <button onClick={() => deleteTicket(ticket)}>Supprimer</button>
-                    </li>)
-                })}
-            </ul>
-            <form onSubmit={(e) => {} } >
+             <form onSubmit={(e) => {} } >
                 <input type="text" name="title" placeholder="Titre" />
                 <input type="text" name="description" placeholder="Description" />
                 <input type="text" name="priority" placeholder="Priorité" />
@@ -95,6 +77,23 @@ export function TicketsList ()
                 <button type="submit">envoyer</button>
             </form>
         
+            <button onClick={() => createTicket({
+                "title": "Ajouter un filtre par priorité",
+                "description": "Permettre de filtrer les tickets par priorité (Low, Medium, High) sur la page liste.",
+                "priority": "Medium",
+                "status": "In Progress",
+                "tags": ["feature", "ux"],
+                "createdAt": "2026-01-15"
+            })}>Ajouter ticket</button>
+            <ul id='ticket-list'>
+                { tickets.map(ticket=>{
+                    const deleteId = 'delete-button-' + ticket.id;
+                    return (
+                    <li key={ticket.id}>
+                        { TicketCard(ticket, updateTicket, deleteTicket) }
+                    </li>)
+                })}
+            </ul>
         </div>
     )
 }

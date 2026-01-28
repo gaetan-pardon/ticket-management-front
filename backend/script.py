@@ -44,6 +44,7 @@ def write_json_file(json_object):
     
     try:
         data = read_response.data
+        print(json_object)
         data.append(json_object)
         with open(filepath, 'w', encoding='utf-8') as file:
             json.dump(data, file, indent=4, ensure_ascii=False)
