@@ -21,17 +21,19 @@ Dans le dossier frontend :
 ```cd frontend```  
 ```npm run dev``` 
 
+Fontend accessible depuis localhost:5173
+
 ## Endpoints  
 
 **Get Endpoints**  
-http://localhost/tickets  
-http://localhost/count-status
+http://localhost:8000/tickets  
+http://localhost:8000/count-status
 
 **POST Endpoints**  
-http://localhost/tickets/{id}
+http://localhost:8000/tickets/{id}
 
 **DELETE Endpoints**  
-http://localhost/tickets/{id}
+http://localhost:8000/tickets/{id}
 
 **PATCH Endpoints**  
-http://localhost/tickets/{id}
+http://localhost:8000/tickets/{id}
