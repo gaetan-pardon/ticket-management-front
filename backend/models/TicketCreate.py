@@ -1,5 +1,4 @@
 from pydantic import BaseModel
-from models.PriorityEnum import PriorityEnum
 from models.StatusEnum import StatusEnum
 from models.PriorityEnum import PriorityEnum
 

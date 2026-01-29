@@ -26,15 +26,13 @@ def write_json_file(json_object : TicketCreate):
     """
     read_response = read_json_file()
     data = read_response["data"]
-    # Convertit le status en string si présent
-    obj_dict = json_object.dict() if hasattr(json_object, 'dict') else dict(json_object)
-    if "status" in obj_dict and isinstance(obj_dict["status"], StatusEnum):
-        obj_dict["status"] = obj_dict["status"].value
-    data.append(obj_dict)
+    newObject = {"id": json_object.id, "title": json_object.title, "description": json_object.description,
+                 "status": json_object.status.value, "tags": json_object.tags,
+                 "priority": json_object.priority.value, "createdAt": json_object.createdAt}
+    data.append(newObject)
     with open(filepath, 'w', encoding='utf-8') as file:
         json.dump(data, file, indent=4, ensure_ascii=False)
-    return {"status": 201, "message": "Objet ajouté avec succès.", "data": obj_dict}
-
+    return {"status": 201, "message": "Objet ajouté avec succès.", "data": newObject}
 
 def count_status():
     """
