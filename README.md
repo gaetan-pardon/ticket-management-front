@@ -2,6 +2,8 @@
 
 ## Installation
 
+télécharger le backend : https://github.com/cmoileboss/ticket-management
+
 Dans le dossier backend :  
 ```pip install uvicorn```  
 ```pip install fastapi```  
