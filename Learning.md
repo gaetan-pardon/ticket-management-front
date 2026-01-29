@@ -1,10 +1,10 @@
 ## Les prompts
 
-Explique-moi comment utiliser fastAPI et uvicorn pour faire une API Python. Quel est le rôle de ces frameworks ? 
+```Explique-moi comment utiliser fastAPI et uvicorn pour faire une API Python. Quel est le rôle de ces frameworks ?``` 
+
 
 Très bonne question, et très importante pour bien comprendre ton projet 👌 
-Je vais t’expliquer pas à pas, sans code, et en séparant bien les rôles de FastAPI et Uvicorn. 
-
+Je vais t’expliquer pas à pas, sans code, et en séparant bien les rôles de FastAPI et Uvicorn.  
  
 
 1. Qu’est-ce qu’une API, dans ton contexte ? 
@@ -237,24 +237,12 @@ ou comment tester ton API sans frontend
 
 Dis-moi 
 
- 
 
- 
-
- 
-
- 
-
- 
-
- 
-
-(index):1 Access to fetch at 'http://localhost:8000/tickets' from origin 'http://localhost:5173' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource. 
+```(index):1 Access to fetch at 'http://localhost:8000/tickets' from origin 'http://localhost:5173' has been blocked by CORS policy: No 'Access-Control-Allow-Origin' header is present on the requested resource.```
 
 Très bien, cette erreur est fondamentale quand on relie un frontend React à une API 👍 
 Je vais t’expliquer calmement, sans code, en partant du principe que tu découvres le sujet. 
 
- 
 
 1. Ce que dit exactement le message 
 
