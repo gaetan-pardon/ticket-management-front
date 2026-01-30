@@ -1,4 +1,3 @@
-import Select from 'react-select';
 import { useState, useEffect } from 'react';
 import { getAllTicketsService, deleteTicketService, createTicketService, getFilteredOrderedTickets } from "../services/ticket-service.jsx" ;
 import { TicketCard } from './ticket-card.jsx';
@@ -65,7 +64,7 @@ export function TicketsList ()
         };
 
         createTicketService(ticket_to_create)
-            .then(data => {
+            .then(() => {
                 return getAllTicketsService();
             })
             .then(data => { 
