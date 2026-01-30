@@ -2,7 +2,7 @@
 
 ## Installation
 
-télécharger le backend : https://github.com/cmoileboss/ticket-management
+Lien le backend : https://github.com/cmoileboss/ticket-management
 
 Dans le dossier backend :  
 ```pip install uvicorn```  
@@ -31,6 +31,7 @@ http://localhost:8000/count-status
 
 **POST Endpoints**  
 http://localhost:8000/tickets/{id}
+http://localhost:8000/tickets/filter
 
 **DELETE Endpoints**  
 http://localhost:8000/tickets/{id}
