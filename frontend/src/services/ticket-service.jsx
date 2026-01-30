@@ -98,12 +98,11 @@ export const createTicketService = async (ticket) => {
  * Récupérer les tickets par statut et priorité.
  * @param {*} status { open, in progress, close }
  * @param {*} priority { Low, Medium, High }
- * @param {*} order { creation_date, priority, status }
+ * @param {*} order { date asc, date desc, priority, status, alphabetical }
  * @returns Liste des tickets filtrés et ordonnés
  */
 export const getFilteredTickets = async (status, priority, order) => {
     try {
-        console.log('Fetching tickets with status ', status, ' and priority ', priority, ' and order ', order);
         const response = await fetch(`${URL}/filter`, {
             method: "POST",
             headers: {

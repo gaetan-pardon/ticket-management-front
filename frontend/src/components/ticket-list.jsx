@@ -13,7 +13,7 @@ export function TicketsList ()
 
     useEffect(() => {
         getAllTicketsService()
-            .then(data => { setTickets(data.data); console.log(data.data)})
+            .then(data => { setTickets(data.data); })
             .catch(error => setError(error))
             .finally(() => setLoading(false));
     }, []);
@@ -33,15 +33,12 @@ export function TicketsList ()
     function deleteTicket(ticket_to_delete) {
         deleteTicketService(ticket_to_delete.id)
             .then(data => {
-                console.log(data);
                 return getAllTicketsService();
             })
             .then(data => { 
                 setTickets(data.data); 
-                console.log(data.data);
             })
             .catch(error => {
-                console.log(error);
                 setError(error);
             });
     }
@@ -69,27 +66,22 @@ export function TicketsList ()
 
         createTicketService(ticket_to_create)
             .then(data => {
-                console.log(data);
                 return getAllTicketsService();
             })
             .then(data => { 
                 setTickets(data.data); 
-                console.log(data.data);
             })
             .catch(error => {
-                console.log(error);
                 setError(error);
             });
     }
 
     function getMaxIndex() {
         let max_index = 0
-        console.log('tickets : ', tickets)
         tickets.map((ticket) => {
             if (parseInt(ticket.id) > max_index)
                 max_index = parseInt(ticket.id);
         })
-        console.log('max_index : ' + max_index)
         return max_index;
     }
 
@@ -103,7 +95,6 @@ export function TicketsList ()
                 setTickets(data.data);
             })
             .catch(error => {
-                console.log(error);
                 setError(error);
             });
     }

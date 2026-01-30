@@ -9,7 +9,6 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
     async function updateTicket() {
         const selectObject = document.getElementById(selectId);
         const selectedStatus = selectObject.options[selectObject.selectedIndex].value;
-        console.log('Updating ticket id ', ticket.id, ' to status ', selectedStatus);
         updateStatusService(ticket.id, selectedStatus)
             .then(data => {
                 return getAllTicketsService();
@@ -17,7 +16,9 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
             .then(data => {
                 updateTicketinList(data.data);
             })
-            .catch(error => console.log(error));
+            .catch(error => {
+                // Handle error silently or log to a service
+            });
     }
 
     return (
