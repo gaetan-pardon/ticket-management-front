@@ -9,6 +9,7 @@ export function TicketsList ()
     const [tickets,setTickets] = useState([]) ;
     const [loading,setLoading] = useState(true) ;
     const [error,setError] = useState(null) ;
+    const [validationError, setValidationError] = useState(null);
 
     useEffect(() => {
         getAllTicketsService()
@@ -53,6 +54,13 @@ export function TicketsList ()
         const createdAt = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
         const status = "open";
 
+        if (!title.trim() || !description.trim()) {
+            setValidationError("Veuillez remplir tous les champs obligatoires (Titre et Description).");
+            return;
+        }
+
+        setValidationError(null);
+
         const ticket_to_create = {
             id: max_index,
             title: title,
@@ -71,7 +79,7 @@ export function TicketsList ()
                 setTickets(data.data); 
             })
             .catch(error => {
-                setError(error);
+                setError("error");
             });
     }
 
@@ -113,6 +121,7 @@ export function TicketsList ()
 
                 <button type="submit">Créer un nouveau ticket</button>
             </form>
+            {validationError && <div className="validation-error">{validationError}</div>}
             <form id="filter-form" className="ticket-form" onSubmit={(e) => { e.preventDefault(); handleFilterChange(); }}>
                 <select name="status" id="status-filter-select" className="filter-select" >
                     <option value="all">All</option>

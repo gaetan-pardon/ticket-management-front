@@ -61,3 +61,15 @@
 .ticket-form button:active {
     background-color: #004085;
 }
+
+.validation-error {
+    color: #dc3545;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    border-radius: 6px;
+    padding: 10px;
+    margin: 10px auto;
+    max-width: 400px;
+    font-size: 0.9rem;
+    text-align: center;
+}
