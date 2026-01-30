@@ -7,7 +7,7 @@
     grid-auto-rows: minmax(100px, auto);
 }
 
-#create-ticket-form {
+.ticket-form {
     background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -21,8 +21,8 @@
     gap: 15px;
 }
 
-#create-ticket-form input,
-#create-ticket-form select {
+.ticket-form input,
+.ticket-form select {
     padding: 10px 12px;
     border: 1px solid #ced4da;
     border-radius: 6px;
@@ -34,14 +34,14 @@
     color: #000000;
 }
 
-#create-ticket-form input:focus,
-#create-ticket-form select:focus {
+.ticket-form input:focus,
+.ticket-form select:focus {
     outline: none;
     border-color: #007bff;
     box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
 }
 
-#create-ticket-form button {
+.ticket-form button {
     background-color: #007bff;
     color: white;
     border: none;
@@ -54,10 +54,10 @@
     margin-top: 10px;
 }
 
-#create-ticket-form button:hover {
+.ticket-form button:hover {
     background-color: #0056b3;
 }
 
-#create-ticket-form button:active {
+.ticket-form button:active {
     background-color: #004085;
 }

@@ -97,7 +97,8 @@ export function TicketsList ()
         const form = document.getElementById('filter-form');
         const statusSelect = form.elements['status'].value;
         const prioritySelect = form.elements['priority'].value;
-        getFilteredTickets(statusSelect, prioritySelect)
+        const orderSelect = form.elements['order'].value;
+        getFilteredTickets(statusSelect, prioritySelect, orderSelect)
             .then(data => {
                 setTickets(data.data);
             })
@@ -109,7 +110,7 @@ export function TicketsList ()
 
     return(
         <div>
-             <form id="create-ticket-form" onSubmit={(e) => { e.preventDefault(); createTicketViaForm(); }} >
+             <form id="create-ticket-form" className="ticket-form" onSubmit={(e) => { e.preventDefault(); createTicketViaForm(); }} >
                 <input type="text" name="title" placeholder="Titre" />
                 <input type="text" name="description" placeholder="Description" />
                 <select name="priority" >
@@ -120,9 +121,9 @@ export function TicketsList ()
                 
                 <input type="text" name="tags" placeholder="Tags" />
 
-                <button type="submit">envoyer</button>
+                <button type="submit">Créer un nouveau ticket</button>
             </form>
-            <form id="filter-form" onSubmit={(e) => { e.preventDefault(); handleFilterChange(); }}>
+            <form id="filter-form" className="ticket-form" onSubmit={(e) => { e.preventDefault(); handleFilterChange(); }}>
                 <select name="status" id="status-filter-select" className="filter-select" >
                     <option value="all">All</option>
                     <option value="open">Open</option>
@@ -134,6 +135,13 @@ export function TicketsList ()
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
+                </select>
+                <select name="order" id="order-filter-select" className="filter-select" >
+                    <option value="date asc">Creation date (asc)</option>
+                    <option value="date desc">Creation date (desc)</option>
+                    <option value="priority">Priority</option>
+                    <option value="status">Status</option>
+                    <option value="alphabetical">Alphabetical Order</option>
                 </select>
                 <button id="apply-filters-button" type="submit">Appliquer les filtres</button>
             </form>
