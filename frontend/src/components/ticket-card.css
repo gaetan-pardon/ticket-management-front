@@ -30,6 +30,9 @@
     font-weight: 600;
     border-bottom: 2px solid #007bff;
     padding-bottom: 8px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .ticket-card p, .ticket-card br {
@@ -37,6 +40,13 @@
     color: #6c757d;
     font-size: 0.95rem;
     line-height: 1.4;
+}
+
+.ticket-card p.description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 .ticket-card strong {
@@ -94,12 +104,6 @@
 
 .ticket-card .delete-button:active {
     background-color: #bd2130;
-}
-
-.ticket-card .delete-button:disabled {
-    background-color: #6c757d;
-    cursor: not-allowed;
-    opacity: 0.6;
 }
 
 /* Priority colors */
