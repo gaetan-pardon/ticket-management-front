@@ -1,6 +1,6 @@
 import Select from 'react-select';
 import { useState, useEffect } from 'react';
-import { getAllTicketsService, deleteTicketService, createTicketService, getFilteredTickets } from "../services/ticket-service.jsx" ;
+import { getAllTicketsService, deleteTicketService, createTicketService, getFilteredOrderedTickets } from "../services/ticket-service.jsx" ;
 import { TicketCard } from './ticket-card.jsx';
 
 import './ticket-list.css';
@@ -90,7 +90,7 @@ export function TicketsList ()
         const statusSelect = form.elements['status'].value;
         const prioritySelect = form.elements['priority'].value;
         const orderSelect = form.elements['order'].value;
-        getFilteredTickets(statusSelect, prioritySelect, orderSelect)
+        getFilteredOrderedTickets(statusSelect, prioritySelect, orderSelect)
             .then(data => {
                 setTickets(data.data);
             })

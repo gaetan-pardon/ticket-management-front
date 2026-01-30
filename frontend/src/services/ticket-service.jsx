@@ -101,7 +101,7 @@ export const createTicketService = async (ticket) => {
  * @param {*} order { date asc, date desc, priority, status, alphabetical }
  * @returns Liste des tickets filtrés et ordonnés
  */
-export const getFilteredTickets = async (status, priority, order) => {
+export const getFilteredOrderedTickets = async (status, priority, order) => {
     try {
         const response = await fetch(`${URL}/filter`, {
             method: "POST",
