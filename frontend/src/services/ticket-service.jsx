@@ -96,8 +96,8 @@ export const createTicketService = async (ticket) => {
 
 /**
  * Récupérer les tickets par statut et priorité.
- * @param {*} status { open, in progress, close }
- * @param {*} priority { Low, Medium, High }
+ * @param {*} status { all, open, in progress, close }
+ * @param {*} priority { all, Low, Medium, High }
  * @param {*} order { date asc, date desc, priority, status, alphabetical }
  * @returns Liste des tickets filtrés et ordonnés
  */

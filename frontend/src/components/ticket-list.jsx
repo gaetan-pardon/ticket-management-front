@@ -14,7 +14,7 @@ export function TicketsList ()
     const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
-        getAllTicketsService()
+        getFilteredOrderedTickets('all', 'all', 'date desc')
             .then(data => { setTickets(data.data); })
             .catch(error => setError(error))
             .finally(() => setLoading(false));
@@ -59,7 +59,6 @@ export function TicketsList ()
     function createTicketViaForm() {
         if (isCreating) return;
 
-        const max_index = getMaxIndex() + 1;
         const form = document.getElementById('create-ticket-form');
         const title = form.elements['title'].value;
         const description = form.elements['description'].value;
@@ -78,7 +77,6 @@ export function TicketsList ()
         setIsCreating(true);
 
         const ticket_to_create = {
-            id: max_index,
             title: title,
             description: description,
             priority: priority,
@@ -100,15 +98,6 @@ export function TicketsList ()
             .finally(() => {
                 setIsCreating(false);
             });
-    }
-
-    function getMaxIndex() {
-        let max_index = 0
-        tickets.map((ticket) => {
-            if (parseInt(ticket.id) > max_index)
-                max_index = parseInt(ticket.id);
-        })
-        return max_index;
     }
 
     function handleFilterChange() {
@@ -155,8 +144,8 @@ export function TicketsList ()
                     <option value="High">High</option>
                 </select>
                 <select name="order" id="order-filter-select" className="filter-select" >
-                    <option value="date asc">Creation date (asc)</option>
                     <option value="date desc">Creation date (desc)</option>
+                    <option value="date asc">Creation date (asc)</option>
                     <option value="priority">Priority</option>
                     <option value="status">Status</option>
                     <option value="alphabetical">Alphabetical Order</option>
