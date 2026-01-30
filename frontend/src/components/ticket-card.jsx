@@ -1,7 +1,7 @@
 import { updateStatusService, getAllTicketsService } from '../services/ticket-service';
 import './ticket-card.css';
 
-export function TicketCard(ticket, updateTicketinList, deleteTicket) {
+export function TicketCard(ticket, updateTicketinList, deleteTicket, isDeleting = false) {
 
     const selectId = `select-status-${ticket.id}`;
     const statusId = `status-${ticket.id}`;
@@ -17,7 +17,6 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
                 updateTicketinList(data.data);
             })
             .catch(error => {
-                // Handle error silently or log to a service
             });
     }
 
@@ -35,7 +34,7 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
                 <option value="close">Close</option>
             </select>
             <button onClick={updateTicket}>Mettre à jour le statut</button>
-            <button onClick={() => deleteTicket(ticket)} className="delete-button">Supprimer</button>
+            <button disabled={isDeleting} onClick={() => deleteTicket(ticket)} className="delete-button">Supprimer</button>
         </div>
     )
 } 

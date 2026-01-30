@@ -10,6 +10,8 @@ export function TicketsList ()
     const [loading,setLoading] = useState(true) ;
     const [error,setError] = useState(null) ;
     const [validationError, setValidationError] = useState(null);
+    const [deletingTickets, setDeletingTickets] = useState(new Set());
+    const [isCreating, setIsCreating] = useState(false);
 
     useEffect(() => {
         getAllTicketsService()
@@ -31,6 +33,10 @@ export function TicketsList ()
     }
 
     function deleteTicket(ticket_to_delete) {
+        if (deletingTickets.has(ticket_to_delete.id)) return;
+
+        setDeletingTickets(prev => new Set(prev).add(ticket_to_delete.id));
+
         deleteTicketService(ticket_to_delete.id)
             .then(data => {
                 return getAllTicketsService();
@@ -40,10 +46,19 @@ export function TicketsList ()
             })
             .catch(error => {
                 setError(error);
+            })
+            .finally(() => {
+                setDeletingTickets(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(ticket_to_delete.id);
+                    return newSet;
+                });
             });
     }
 
     function createTicketViaForm() {
+        if (isCreating) return;
+
         const max_index = getMaxIndex() + 1;
         const form = document.getElementById('create-ticket-form');
         const title = form.elements['title'].value;
@@ -60,6 +75,7 @@ export function TicketsList ()
         }
 
         setValidationError(null);
+        setIsCreating(true);
 
         const ticket_to_create = {
             id: max_index,
@@ -80,6 +96,9 @@ export function TicketsList ()
             })
             .catch(error => {
                 setError("error");
+            })
+            .finally(() => {
+                setIsCreating(false);
             });
     }
 
@@ -119,7 +138,7 @@ export function TicketsList ()
                 
                 <input type="text" name="tags" placeholder="Tags" />
 
-                <button type="submit">Créer un nouveau ticket</button>
+                <button disabled={isCreating} type="submit">Créer un nouveau ticket</button>
             </form>
             {validationError && <div className="validation-error">{validationError}</div>}
             <form id="filter-form" className="ticket-form" onSubmit={(e) => { e.preventDefault(); handleFilterChange(); }}>
@@ -149,7 +168,7 @@ export function TicketsList ()
                     const deleteId = 'delete-button-' + ticket.id;
                     return (
                     <li key={ticket.id}>
-                        { TicketCard(ticket, updateTicket, deleteTicket) }
+                        { TicketCard(ticket, updateTicket, deleteTicket, deletingTickets.has(ticket.id)) }
                     </li>)
                 })}
             </ul>
