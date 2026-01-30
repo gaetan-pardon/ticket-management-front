@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { getAllTicketsService, deleteTicketService, createTicketService, getFilteredOrderedTickets } from "../services/ticket-service.jsx" ;
+import { deleteTicketService, createTicketService, getFilteredOrderedTickets } from "../services/ticket-service.jsx" ;
 import { TicketCard } from './ticket-card.jsx';
 
 import './ticket-list.css';
@@ -12,13 +12,16 @@ export function TicketsList ()
     const [validationError, setValidationError] = useState(null);
     const [deletingTickets, setDeletingTickets] = useState(new Set());
     const [isCreating, setIsCreating] = useState(false);
+    const [currentStatusFilter, setCurrentStatusFilter] = useState('all');
+    const [currentPriorityFilter, setCurrentPriorityFilter] = useState('all');
+    const [currentOrderFilter, setCurrentOrderFilter] = useState('date desc');
 
     useEffect(() => {
-        getFilteredOrderedTickets('all', 'all', 'date desc')
+        getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter)
             .then(data => { setTickets(data.data); })
             .catch(error => setError(error))
             .finally(() => setLoading(false));
-    }, []);
+    }, [currentStatusFilter, currentPriorityFilter, currentOrderFilter]);
 
     if (loading) {
         return(<div id ="loading"> Chargement des tickets en cours...   </div>)
@@ -39,7 +42,7 @@ export function TicketsList ()
 
         deleteTicketService(ticket_to_delete.id)
             .then(data => {
-                return getAllTicketsService();
+                return getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter);
             })
             .then(data => { 
                 setTickets(data.data); 
@@ -87,7 +90,7 @@ export function TicketsList ()
 
         createTicketService(ticket_to_create)
             .then(() => {
-                return getAllTicketsService();
+                return getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter);
             })
             .then(data => { 
                 setTickets(data.data); 
@@ -105,13 +108,9 @@ export function TicketsList ()
         const statusSelect = form.elements['status'].value;
         const prioritySelect = form.elements['priority'].value;
         const orderSelect = form.elements['order'].value;
-        getFilteredOrderedTickets(statusSelect, prioritySelect, orderSelect)
-            .then(data => {
-                setTickets(data.data);
-            })
-            .catch(error => {
-                setError(error);
-            });
+        setCurrentStatusFilter(statusSelect);
+        setCurrentPriorityFilter(prioritySelect);
+        setCurrentOrderFilter(orderSelect);
     }
 
     return(
@@ -157,7 +156,7 @@ export function TicketsList ()
                     const deleteId = 'delete-button-' + ticket.id;
                     return (
                     <li key={ticket.id}>
-                        { TicketCard(ticket, updateTicket, deleteTicket, deletingTickets.has(ticket.id)) }
+                        { TicketCard(ticket, updateTicket, deleteTicket, deletingTickets.has(ticket.id), currentStatusFilter, currentPriorityFilter, currentOrderFilter) }
                     </li>)
                 })}
             </ul>

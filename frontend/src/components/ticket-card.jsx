@@ -1,7 +1,7 @@
-import { updateStatusService, getAllTicketsService } from '../services/ticket-service';
+import { updateStatusService, getAllTicketsService, getFilteredOrderedTickets } from '../services/ticket-service';
 import './ticket-card.css';
 
-export function TicketCard(ticket, updateTicketinList, deleteTicket, isDeleting = false) {
+export function TicketCard(ticket, updateTicketinList, deleteTicket, isDeleting = false, statusFilter, priorityFilter, orderFilter) {
 
     const selectId = `select-status-${ticket.id}`;
     const statusId = `status-${ticket.id}`;
@@ -11,7 +11,7 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket, isDeleting 
         const selectedStatus = selectObject.options[selectObject.selectedIndex].value;
         updateStatusService(ticket.id, selectedStatus)
             .then(data => {
-                return getAllTicketsService();
+                return getFilteredOrderedTickets(statusFilter, priorityFilter, orderFilter);
             })
             .then(data => {
                 updateTicketinList(data.data);
