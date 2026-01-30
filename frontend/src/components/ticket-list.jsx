@@ -1,5 +1,6 @@
+import Select from 'react-select';
 import { useState, useEffect } from 'react';
-import { getAllTicketsService, deleteTicketService, createTicketService } from "../services/ticket-service.jsx" ;
+import { getAllTicketsService, deleteTicketService, createTicketService, getFilteredTickets } from "../services/ticket-service.jsx" ;
 import { TicketCard } from './ticket-card.jsx';
 
 import './ticket-list.css';
@@ -9,7 +10,6 @@ export function TicketsList ()
     const [tickets,setTickets] = useState([]) ;
     const [loading,setLoading] = useState(true) ;
     const [error,setError] = useState(null) ;
-
 
     useEffect(() => {
         getAllTicketsService()
@@ -93,9 +93,23 @@ export function TicketsList ()
         return max_index;
     }
 
+    function handleFilterChange() {
+        const form = document.getElementById('filter-form');
+        const statusSelect = form.elements['status'].value;
+        const prioritySelect = form.elements['priority'].value;
+        getFilteredTickets(statusSelect, prioritySelect)
+            .then(data => {
+                setTickets(data.data);
+            })
+            .catch(error => {
+                console.log(error);
+                setError(error);
+            });
+    }
+
     return(
         <div>
-             <form id="create-ticket-form"  >
+             <form id="create-ticket-form" onSubmit={(e) => { e.preventDefault(); createTicketViaForm(); }} >
                 <input type="text" name="title" placeholder="Titre" />
                 <input type="text" name="description" placeholder="Description" />
                 <select name="priority" >
@@ -106,9 +120,23 @@ export function TicketsList ()
                 
                 <input type="text" name="tags" placeholder="Tags" />
 
-                <button type="submit" onClick={(e) => {createTicketViaForm()}}>envoyer</button>
+                <button type="submit">envoyer</button>
             </form>
-        
+            <form id="filter-form" onSubmit={(e) => { e.preventDefault(); handleFilterChange(); }}>
+                <select name="status" id="status-filter-select" className="filter-select" >
+                    <option value="all">All</option>
+                    <option value="open">Open</option>
+                    <option value="in progress">In Progress</option>
+                    <option value="close">Close</option>
+                </select>
+                <select name="priority" id="priority-filter-select" className="filter-select" >
+                    <option value="all">All</option>
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                </select>
+                <button id="apply-filters-button" type="submit">Appliquer les filtres</button>
+            </form>
             <ul id='ticket-list'>
                 { tickets.map(ticket=>{
                     const deleteId = 'delete-button-' + ticket.id;

@@ -95,36 +95,20 @@ export const createTicketService = async (ticket) => {
 }
 
 /**
- * Récupérer les tickets par statut.
+ * Récupérer les tickets par statut et priorité.
  * @param {*} status { open, in progress, close }
- * @returns 
- */
-export const getTicketByStatus = async (status) => {
-    try {
-        const true_status = status.replace(" ", "%20");
-        const response = await fetch(`${URL}/status/${true_status}`, {
-            method: "GET"
-        });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
-        const tickets = await response.json();
-        return tickets;
-    } catch (error) {
-        console.error('Error fetching tickets:', error);
-        throw error;
-    }
-}
-
-/**
- * Récupérer les tickets par priorité.
  * @param {*} priority { Low, Medium, High }
  * @returns 
  */
-export const getTicketByPriority = async (priority) => {
+export const getFilteredTickets = async (status, priority) => {
     try {
-        const response = await fetch(`${URL}/priority/${priority}`, {
-            method: "GET"
+        console.log('Fetching tickets with status ', status, ' and priority ', priority);
+        const response = await fetch(`${URL}/filter`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ status, priority })
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
