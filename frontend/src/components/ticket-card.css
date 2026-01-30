@@ -10,6 +10,7 @@
     border: 1px solid #e9ecef;
     max-width: 400px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    word-break: break-all;
 }
 
 .ticket-card:hover {
