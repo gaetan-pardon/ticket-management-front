@@ -26,20 +26,24 @@ export function TicketsList ()
         return(<div id = "error" > Error </div>)
     }
 
-    function updateTicket(ticket, new_status) {
-        let new_tickets = [...tickets];
-        const index = tickets.indexOf(ticket);
-        new_tickets[index].status = new_status;
-        setTickets(new_tickets);
+    function updateTicket(tickets_updated) {
+        setTickets(tickets_updated);
     }
 
     function deleteTicket(ticket_to_delete) {
         deleteTicketService(ticket_to_delete.id)
-            .then(data => console.log(data))
-            .catch(error => console.log(error))
-        
-        const new_tickets = tickets.filter((ticket) => ticket.id !== ticket_to_delete.id);
-        setTickets(new_tickets);
+            .then(data => {
+                console.log(data);
+                return getAllTicketsService();
+            })
+            .then(data => { 
+                setTickets(data.data); 
+                console.log(data.data);
+            })
+            .catch(error => {
+                console.log(error);
+                setError(error);
+            });
     }
 
     function createTicketViaForm() {
@@ -64,13 +68,18 @@ export function TicketsList ()
         };
 
         createTicketService(ticket_to_create)
-            .then(data => console.log(data))
-            .catch(error => console.log(error))
-
-
-        let new_tickets = [...tickets];
-        new_tickets.push(ticket_to_create);
-        setTickets(new_tickets);
+            .then(data => {
+                console.log(data);
+                return getAllTicketsService();
+            })
+            .then(data => { 
+                setTickets(data.data); 
+                console.log(data.data);
+            })
+            .catch(error => {
+                console.log(error);
+                setError(error);
+            });
     }
 
     function getMaxIndex() {

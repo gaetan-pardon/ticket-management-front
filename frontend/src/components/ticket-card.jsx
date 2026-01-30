@@ -1,4 +1,4 @@
-import { updateStatusService } from '../services/ticket-service';
+import { updateStatusService, getAllTicketsService } from '../services/ticket-service';
 import './ticket-card.css';
 
 export function TicketCard(ticket, updateTicketinList, deleteTicket) {
@@ -12,7 +12,10 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket) {
         console.log('Updating ticket id ', ticket.id, ' to status ', selectedStatus);
         updateStatusService(ticket.id, selectedStatus)
             .then(data => {
-                updateTicketinList(ticket, selectedStatus);
+                return getAllTicketsService();
+            })
+            .then(data => {
+                updateTicketinList(data.data);
             })
             .catch(error => console.log(error));
     }
