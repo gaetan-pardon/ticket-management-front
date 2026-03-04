@@ -15,6 +15,12 @@ export function TicketsList ()
     const [currentStatusFilter, setCurrentStatusFilter] = useState('all');
     const [currentPriorityFilter, setCurrentPriorityFilter] = useState('all');
     const [currentOrderFilter, setCurrentOrderFilter] = useState('date desc');
+    
+    // États pour le formulaire de création (composants contrôlés)
+    const [titleInput, setTitleInput] = useState('');
+    const [descriptionInput, setDescriptionInput] = useState('');
+    const [priorityInput, setPriorityInput] = useState('Low');
+    const [tagsInput, setTagsInput] = useState('');
 
     useEffect(() => {
         getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter)
@@ -59,19 +65,13 @@ export function TicketsList ()
             });
     }
 
-    function createTicketViaForm() {
+    function createTicketViaForm(e) {
+        e.preventDefault();
+        
         if (isCreating) return;
 
-        const form = document.getElementById('create-ticket-form');
-        const title = form.elements['title'].value;
-        const description = form.elements['description'].value;
-        const priority = form.elements['priority'].value;
-        const tags_string = form.elements['tags'].value;
-        const tags = tags_string.split(',').map(tag => tag.trim());
-        const createdAt = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-        const status = "open";
-
-        if (!title.trim() || !description.trim()) {
+        // Validation
+        if (!titleInput.trim() || !descriptionInput.trim()) {
             setValidationError("Veuillez remplir tous les champs obligatoires (Titre et Description).");
             return;
         }
@@ -79,10 +79,19 @@ export function TicketsList ()
         setValidationError(null);
         setIsCreating(true);
 
+        // Parser les tags et filtrer les tags vides
+        const tags = tagsInput
+            .split(',')
+            .map(tag => tag.trim())
+            .filter(tag => tag.length > 0);
+
+        const createdAt = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
+        const status = "open";
+
         const ticket_to_create = {
-            title: title,
-            description: description,
-            priority: priority,
+            title: titleInput.trim(),
+            description: descriptionInput.trim(),
+            priority: priorityInput,
             tags: tags,
             createdAt: createdAt,
             status: status
@@ -93,7 +102,13 @@ export function TicketsList ()
                 return getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter);
             })
             .then(data => { 
-                setTickets(data.data); 
+                setTickets(data.data);
+                
+                // Réinitialiser le formulaire après création réussie
+                setTitleInput('');
+                setDescriptionInput('');
+                setPriorityInput('Low');
+                setTagsInput('');
             })
             .catch(error => {
                 setError("error");
@@ -103,54 +118,97 @@ export function TicketsList ()
             });
     }
 
-    function handleFilterChange() {
-        const form = document.getElementById('filter-form');
-        const statusSelect = form.elements['status'].value;
-        const prioritySelect = form.elements['priority'].value;
-        const orderSelect = form.elements['order'].value;
-        setCurrentStatusFilter(statusSelect);
-        setCurrentPriorityFilter(prioritySelect);
-        setCurrentOrderFilter(orderSelect);
-    }
-
     return(
         <div>
-             <form id="create-ticket-form" className="ticket-form" onSubmit={(e) => { e.preventDefault(); createTicketViaForm(); }} >
-                <input type="text" name="title" placeholder="Titre" />
-                <input type="text" name="description" placeholder="Description" />
-                <select name="priority" >
+             <form id="create-ticket-form" className="ticket-form" onSubmit={createTicketViaForm} >
+                <input 
+                    type="text" 
+                    name="title" 
+                    placeholder="Titre" 
+                    value={titleInput}
+                    onChange={(e) => setTitleInput(e.target.value)}
+                />
+                <input 
+                    type="text" 
+                    name="description" 
+                    placeholder="Description" 
+                    value={descriptionInput}
+                    onChange={(e) => setDescriptionInput(e.target.value)}
+                />
+                <select 
+                    name="priority"
+                    value={priorityInput}
+                    onChange={(e) => setPriorityInput(e.target.value)}
+                >
                     <option value="Low">Low</option>
                     <option value="Medium">Medium</option>
                     <option value="High">High</option>
                 </select>
                 
-                <input type="text" name="tags" placeholder="Tags" />
+                <input 
+                    type="text" 
+                    name="tags" 
+                    placeholder="Tags (séparés par des virgules)" 
+                    value={tagsInput}
+                    onChange={(e) => setTagsInput(e.target.value)}
+                />
 
-                <button disabled={isCreating} type="submit">Créer un nouveau ticket</button>
+                <button disabled={isCreating} type="submit">
+                    {isCreating ? 'Création...' : 'Créer un nouveau ticket'}
+                </button>
             </form>
             {validationError && <div className="validation-error">{validationError}</div>}
-            <form id="filter-form" className="ticket-form" onSubmit={(e) => { e.preventDefault(); handleFilterChange(); }}>
-                <select name="status" id="status-filter-select" className="filter-select" >
-                    <option value="all">All</option>
-                    <option value="open">Open</option>
-                    <option value="in progress">In Progress</option>
-                    <option value="close">Close</option>
-                </select>
-                <select name="priority" id="priority-filter-select" className="filter-select" >
-                    <option value="all">All</option>
-                    <option value="Low">Low</option>
-                    <option value="Medium">Medium</option>
-                    <option value="High">High</option>
-                </select>
-                <select name="order" id="order-filter-select" className="filter-select" >
-                    <option value="date desc">Creation date (desc)</option>
-                    <option value="date asc">Creation date (asc)</option>
-                    <option value="priority">Priority</option>
-                    <option value="status">Status</option>
-                    <option value="alphabetical">Alphabetical Order</option>
-                </select>
-                <button id="apply-filters-button" type="submit">Appliquer les filtres</button>
-            </form>
+            <div className="ticket-form filter-form">
+                <h3>Filtrer les tickets</h3>
+                <div className="filters-container">
+                    <div className="filter-group">
+                        <label htmlFor="status-filter-select">Statut :</label>
+                        <select 
+                            name="status" 
+                            id="status-filter-select" 
+                            className="filter-select"
+                            value={currentStatusFilter}
+                            onChange={(e) => setCurrentStatusFilter(e.target.value)}
+                        >
+                            <option value="all">All</option>
+                            <option value="open">Open</option>
+                            <option value="in progress">In Progress</option>
+                            <option value="close">Close</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="priority-filter-select">Priorité :</label>
+                        <select 
+                            name="priority" 
+                            id="priority-filter-select" 
+                            className="filter-select"
+                            value={currentPriorityFilter}
+                            onChange={(e) => setCurrentPriorityFilter(e.target.value)}
+                        >
+                            <option value="all">All</option>
+                            <option value="Low">Low</option>
+                            <option value="Medium">Medium</option>
+                            <option value="High">High</option>
+                        </select>
+                    </div>
+                    <div className="filter-group">
+                        <label htmlFor="order-filter-select">Ordre :</label>
+                        <select 
+                            name="order" 
+                            id="order-filter-select" 
+                            className="filter-select"
+                            value={currentOrderFilter}
+                            onChange={(e) => setCurrentOrderFilter(e.target.value)}
+                        >
+                            <option value="date desc">Creation date (desc)</option>
+                            <option value="date asc">Creation date (asc)</option>
+                            <option value="priority">Priority</option>
+                            <option value="status">Status</option>
+                            <option value="alphabetical">Alphabetical Order</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
             <ul id='ticket-list'>
                 { tickets.map(ticket=>{
                     const deleteId = 'delete-button-' + ticket.id;

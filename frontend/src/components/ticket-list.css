@@ -79,3 +79,35 @@
     font-size: 0.9rem;
     text-align: center;
 }
+
+.filter-form {
+    max-width: 800px;
+}
+
+.filter-form h3 {
+    margin: 0 0 15px 0;
+    color: #343a40;
+    font-size: 1.2rem;
+}
+
+.filters-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.filter-group label {
+    font-weight: 500;
+    color: #495057;
+    font-size: 0.9rem;
+}
+
+.filter-select {
+    width: 100%;
+}
