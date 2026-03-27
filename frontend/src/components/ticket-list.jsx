@@ -6,17 +6,17 @@ import './ticket-list.css';
 
 export function TicketsList () 
 {
-    const [tickets,setTickets] = useState([]) ;
-    const [loading,setLoading] = useState(true) ;
-    const [error,setError] = useState(null) ;
+    const [tickets, setTickets] = useState([]) ;
+    const [loading, setLoading] = useState(true) ;
+    const [error, setError] = useState(null) ;
     const [validationError, setValidationError] = useState(null);
     const [deletingTickets, setDeletingTickets] = useState(new Set());
     const [isCreating, setIsCreating] = useState(false);
     const [currentStatusFilter, setCurrentStatusFilter] = useState('all');
     const [currentPriorityFilter, setCurrentPriorityFilter] = useState('all');
-    const [currentOrderFilter, setCurrentOrderFilter] = useState('date desc');
+    const [currentOrderFilter, setCurrentOrderFilter] = useState('date_desc');
     
-    // États pour le formulaire de création (composants contrôlés)
+    // États pour le formulaire de création
     const [titleInput, setTitleInput] = useState('');
     const [descriptionInput, setDescriptionInput] = useState('');
     const [priorityInput, setPriorityInput] = useState('Low');
@@ -24,7 +24,7 @@ export function TicketsList ()
 
     useEffect(() => {
         getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter)
-            .then(data => { setTickets(data.data); })
+            .then(data => { setTickets(data); })
             .catch(error => setError(error))
             .finally(() => setLoading(false));
     }, [currentStatusFilter, currentPriorityFilter, currentOrderFilter]);
@@ -42,27 +42,28 @@ export function TicketsList ()
     }
 
     function deleteTicket(ticket_to_delete) {
-        if (deletingTickets.has(ticket_to_delete.id)) return;
+    //     if (deletingTickets.has(ticket_to_delete.id)) return;
 
-        setDeletingTickets(prev => new Set(prev).add(ticket_to_delete.id));
+    //     setDeletingTickets(prev => new Set(prev).add(ticket_to_delete.id));
 
         deleteTicketService(ticket_to_delete.id)
             .then(data => {
                 return getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter);
             })
             .then(data => { 
-                setTickets(data.data); 
+                console.log(data);
+                setTickets(data);
             })
             .catch(error => {
                 setError(error);
-            })
-            .finally(() => {
-                setDeletingTickets(prev => {
-                    const newSet = new Set(prev);
-                    newSet.delete(ticket_to_delete.id);
-                    return newSet;
-                });
             });
+            // .finally(() => {
+            //     setDeletingTickets(prev => {
+            //         const newSet = new Set(prev);
+            //         newSet.delete(ticket_to_delete.id);
+            //         return newSet;
+            //     });
+            // });
     }
 
     function createTicketViaForm(e) {
@@ -70,9 +71,28 @@ export function TicketsList ()
         
         if (isCreating) return;
 
+
         // Validation
-        if (!titleInput.trim() || !descriptionInput.trim()) {
+        const trimmedTitle = titleInput.trim();
+        const trimmedDescription = descriptionInput.trim();
+        if (!trimmedTitle || !trimmedDescription) {
             setValidationError("Veuillez remplir tous les champs obligatoires (Titre et Description).");
+            return;
+        }
+        if (trimmedTitle.length < 5) {
+            setValidationError("Le titre doit contenir au moins 5 caractères.");
+            return;
+        }
+        if (trimmedTitle.length > 50) {
+            setValidationError("Le titre ne doit pas dépasser 50 caractères.");
+            return;
+        }
+        if (trimmedDescription.length < 10) {
+            setValidationError("La description doit contenir au moins 10 caractères.");
+            return;
+        }
+        if (trimmedDescription.length > 500) {
+            setValidationError("La description ne doit pas dépasser 500 caractères.");
             return;
         }
 
@@ -86,7 +106,7 @@ export function TicketsList ()
             .filter(tag => tag.length > 0);
 
         const createdAt = new Date().toISOString().split('T')[0]; // Format YYYY-MM-DD
-        const status = "open";
+        const status = "Open";
 
         const ticket_to_create = {
             title: titleInput.trim(),
@@ -102,7 +122,7 @@ export function TicketsList ()
                 return getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter);
             })
             .then(data => { 
-                setTickets(data.data);
+                setTickets(data);
                 
                 // Réinitialiser le formulaire après création réussie
                 setTitleInput('');
@@ -171,9 +191,9 @@ export function TicketsList ()
                             onChange={(e) => setCurrentStatusFilter(e.target.value)}
                         >
                             <option value="all">All</option>
-                            <option value="open">Open</option>
-                            <option value="in progress">In Progress</option>
-                            <option value="close">Close</option>
+                            <option value="Open">Open</option>
+                            <option value="In progress">In Progress</option>
+                            <option value="Closed">Closed</option>
                         </select>
                     </div>
                     <div className="filter-group">
@@ -200,8 +220,8 @@ export function TicketsList ()
                             value={currentOrderFilter}
                             onChange={(e) => setCurrentOrderFilter(e.target.value)}
                         >
-                            <option value="date desc">Creation date (desc)</option>
-                            <option value="date asc">Creation date (asc)</option>
+                            <option value="date_desc">Creation date (desc)</option>
+                            <option value="date_asc">Creation date (asc)</option>
                             <option value="priority">Priority</option>
                             <option value="status">Status</option>
                             <option value="alphabetical">Alphabetical Order</option>
@@ -210,13 +230,9 @@ export function TicketsList ()
                 </div>
             </div>
             <ul id='ticket-list'>
-                { tickets.map(ticket=>{
-                    const deleteId = 'delete-button-' + ticket.id;
-                    return (
-                    <li key={ticket.id}>
-                        { TicketCard(ticket, updateTicket, deleteTicket, deletingTickets.has(ticket.id), currentStatusFilter, currentPriorityFilter, currentOrderFilter) }
-                    </li>)
-                })}
+                { tickets.map(ticket =>
+                    TicketCard(ticket, updateTicket, deleteTicket, deletingTickets.has(ticket.id), currentStatusFilter, currentPriorityFilter, currentOrderFilter)
+                )}
             </ul>
         </div>
     )

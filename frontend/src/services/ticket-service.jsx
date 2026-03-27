@@ -108,7 +108,7 @@ export const getFilteredOrderedTickets = async (status, priority, order) => {
             headers: {
                 "Content-Type": "application/json"
             },
-            body: JSON.stringify({ status, priority, order })
+            body: JSON.stringify({ "status": status, "priority": priority, "order": order })
         });
         if (!response.ok) {
             throw new Error('Network response was not ok');
