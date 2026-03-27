@@ -15,7 +15,7 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket, isDeleting 
                 return getFilteredOrderedTickets(statusFilter, priorityFilter, orderFilter);
             })
             .then(data => {
-                updateTicketinList(data.data);
+                updateTicketinList(data);
             })
             .catch(error => {
             });
@@ -31,9 +31,9 @@ export function TicketCard(ticket, updateTicketinList, deleteTicket, isDeleting 
                 <p><strong>Tags :</strong> {ticket.tags.join(', ')}</p>
                 <p><strong>Date de création :</strong> {ticket.createdAt}</p>
                 <select id={selectId}>
-                    <option value="open">Open</option>
-                    <option value="in progress">In Progress</option>
-                    <option value="close">Close</option>
+                    <option value="Open">Open</option>
+                    <option value="In progress">In progress</option>
+                    <option value="Closed">Closed</option>
                 </select>
                 <button onClick={updateTicket}>Mettre à jour le statut</button>
                 <button disabled={isDeleting} onClick={() => deleteTicket(ticket)} className="delete-button">Supprimer</button>

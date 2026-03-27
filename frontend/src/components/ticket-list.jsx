@@ -42,28 +42,27 @@ export function TicketsList ()
     }
 
     function deleteTicket(ticket_to_delete) {
-    //     if (deletingTickets.has(ticket_to_delete.id)) return;
+        if (deletingTickets.has(ticket_to_delete.id)) return;
 
-    //     setDeletingTickets(prev => new Set(prev).add(ticket_to_delete.id));
+        setDeletingTickets(prev => new Set(prev).add(ticket_to_delete.id));
 
         deleteTicketService(ticket_to_delete.id)
             .then(data => {
                 return getFilteredOrderedTickets(currentStatusFilter, currentPriorityFilter, currentOrderFilter);
             })
-            .then(data => { 
-                console.log(data);
+            .then(data => {
                 setTickets(data);
             })
             .catch(error => {
                 setError(error);
+            })
+            .finally(() => {
+                setDeletingTickets(prev => {
+                    const newSet = new Set(prev);
+                    newSet.delete(ticket_to_delete.id);
+                    return newSet;
+                });
             });
-            // .finally(() => {
-            //     setDeletingTickets(prev => {
-            //         const newSet = new Set(prev);
-            //         newSet.delete(ticket_to_delete.id);
-            //         return newSet;
-            //     });
-            // });
     }
 
     function createTicketViaForm(e) {

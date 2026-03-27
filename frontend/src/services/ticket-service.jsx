@@ -36,12 +36,9 @@ export const updateStatusService = async (id, new_status) => {
             },
             body: JSON.stringify({ "status" : new_status })
         });
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+
         const updatedTicket = await response.json();
         return updatedTicket;
-
     } catch (error) {
         console.error('Error fetching tickets:', error);
         throw error;
@@ -61,8 +58,7 @@ export const deleteTicketService = async (id) => {
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
-        const deletedTicket = response.json();
-        return deletedTicket;
+        return true;
     } catch (error) {
         console.error('Error fetching tickets:', error);
         throw error;
